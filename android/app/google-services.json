@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "236967232032",
+    "firebase_url": "https://shop-management-721b3.firebaseio.com",
+    "project_id": "shop-management-721b3",
+    "storage_bucket": "shop-management-721b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236967232032:android:5a822b65701a6cb4e97245",
+        "android_client_info": {
+          "package_name": "com.example.shop_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236967232032-u21c1mc9l5757qscq3fuvus1ttjlttrc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA39t9ju0hZlqbCeQuvBWuZkb0A1kgaghY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236967232032-u21c1mc9l5757qscq3fuvus1ttjlttrc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
