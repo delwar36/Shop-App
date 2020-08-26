@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shop_app/login/auth.dart';
 // import 'package:shop_mangement/helpers/db_helper.dart';
 import '../models/product.dart';
 import 'dart:convert';
@@ -11,6 +13,7 @@ class ProductsProvider with ChangeNotifier {
   //     'CREATE TABLE products(id TEXT PRIMARY KEY, title TEXT, categories TEXT, pPrice DOUBLE(50, 2), sPrice DOUBLE(50, 2), unit TEXT, amount DOUBLE(50, 2), imageUrl TEXT, dateTime TEXT)';
 
   List<Product> _items = [];
+  BaseAuth auth;
 
   List<Product> get items {
     return [..._items];
@@ -28,8 +31,11 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> decreaseById(String id, double amount) async {
     Product product = _items.firstWhere((prod) => prod.id == id);
+
+    final currentUser = await FirebaseAuth.instance.currentUser();
+    String userId = currentUser.uid.toString();
     final url =
-        'https://shop-management-721b3.firebaseio.com/products/$id.json';
+        'https://shop-management-721b3.firebaseio.com/$userId/products/$id.json';
     await http.patch(url,
         body: json.encode({
           'amount': product.amount - amount,
@@ -40,7 +46,10 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> fetchAllProduct() async {
     _items.clear();
-    const url = 'https://shop-management-721b3.firebaseio.com/products.json';
+    final currentUser = await FirebaseAuth.instance.currentUser();
+    String userId = currentUser.uid.toString();
+    final url =
+        'https://shop-management-721b3.firebaseio.com/$userId/products.json';
     try {
       final response = await http.get(url);
       // print(response.body);
@@ -50,6 +59,7 @@ class ProductsProvider with ChangeNotifier {
       if (extractData == null) {
         return;
       }
+      print('UserId: ' + userId);
 
       extractData.forEach((prodId, prodData) {
         loadedProduct.add(
@@ -85,6 +95,7 @@ class ProductsProvider with ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print(error.toString());
+      print('UserId: ' + userId);
       throw error;
     }
   }
@@ -101,13 +112,18 @@ class ProductsProvider with ChangeNotifier {
       'dateTime': product.dateTime.toIso8601String(),
     };
 
-    const url = 'https://shop-management-721b3.firebaseio.com/products.json';
+    final currentUser = await FirebaseAuth.instance.currentUser();
+    String userId = currentUser.uid.toString();
+
+    final url =
+        'https://shop-management-721b3.firebaseio.com/$userId/products.json';
 
     try {
       final response = await http.post(
         url,
         body: json.encode(remmoteProduct),
       );
+      print('UserId: ' + userId);
       final newProduct = Product(
         id: json.decode(response.body)['name'],
         // id: DateTime.now().toIso8601String(),
@@ -136,19 +152,23 @@ class ProductsProvider with ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print(error.toString());
+      print('UserId: ' + userId);
       throw error;
     }
   }
 
   Future<void> deleteProduct(String productId) async {
+    final currentUser = await FirebaseAuth.instance.currentUser();
+    String userId = currentUser.uid.toString();
     final url =
-        'https://shop-management-721b3.firebaseio.com/products/$productId.json';
+        'https://shop-management-721b3.firebaseio.com/$userId/products/$productId.json';
     try {
       await http.delete(url);
       _items.remove(_items.firstWhere((prod) => prod.id == productId));
       notifyListeners();
     } catch (error) {
       print(error.toString());
+      print('UserId: ' + userId);
       throw error;
     }
   }

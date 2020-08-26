@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/bangla_converters/number_converter.dart';
 
 class ChartBar extends StatelessWidget {
   final String label;
@@ -20,7 +21,8 @@ class ChartBar extends StatelessWidget {
             Container(
               height: constraint.maxHeight * 0.15,
               child: FittedBox(
-                child: Text('\u09f3${spendingAmount.toStringAsFixed(0)}'),
+                child: Text(EnglishToBangla.englishToBanglaNumberFont(
+                    '\u09f3${spendingAmount.toStringAsFixed(0)}')),
               ),
             ),
             SizedBox(

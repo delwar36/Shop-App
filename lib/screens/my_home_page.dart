@@ -6,9 +6,9 @@ import '../login/auth.dart';
 import '../widgets/summary_widget.dart';
 import '../providers/purchase_provider.dart';
 import '../widgets/purchase_chart.dart';
-import '../models/category.dart';
+// import '../models/category.dart';
 import '../providers/category_provider.dart';
-import '../widgets/new_category.dart';
+// import '../widgets/new_category.dart';
 import '../widgets/purchase_list.dart';
 
 import '../models/product.dart';
@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     try {
       await Provider.of<ProductsProvider>(context, listen: false)
-          .addProduct(product);
+          .addProduct(product, );
       await Provider.of<PurchaseProvider>(context, listen: false)
           .addPurchase(product);
     } catch (error) {
@@ -149,31 +149,31 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _addNewCategory(
-    String enteredTitle,
-    String enteredImageUrl,
-  ) async {
-    setState(() {
-      _isLoading = true;
-    });
-    final category = Category(
-      id: DateTime.now().toString(),
-      title: enteredTitle,
-      thumbnailLink: enteredImageUrl,
-      dateTime: DateTime.now(),
-    );
+  // void _addNewCategory(
+  //   String enteredTitle,
+  //   String enteredImageUrl,
+  // ) async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   final category = Category(
+  //     id: DateTime.now().toString(),
+  //     title: enteredTitle,
+  //     thumbnailLink: enteredImageUrl,
+  //     dateTime: DateTime.now(),
+  //   );
 
-    try {
-      await Provider.of<CategoryProvider>(context, listen: false)
-          .addCategory(category);
-    } catch (erroro) {
-      showErrorDialog();
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+  //   try {
+  //     await Provider.of<CategoryProvider>(context, listen: false)
+  //         .addCategory(category);
+  //   } catch (erroro) {
+  //     showErrorDialog();
+  //   } finally {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
 
   Future showErrorDialog() {
     return showDialog(
@@ -193,32 +193,32 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _startAddNewCategory(BuildContext ctx) {
-    showModalBottomSheet(
-      elevation: 6,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25),
-        ),
-      ),
-      context: ctx,
-      isScrollControlled: true,
-      builder: (bCtx) {
-        return GestureDetector(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: NewCategory(_addNewCategory),
-          ),
-          onTap: () {},
-          behavior: HitTestBehavior.opaque,
-        );
-      },
-    );
-  }
+  // void _startAddNewCategory(BuildContext ctx) {
+  //   showModalBottomSheet(
+  //     elevation: 6,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(
+  //         top: Radius.circular(25),
+  //       ),
+  //     ),
+  //     context: ctx,
+  //     isScrollControlled: true,
+  //     builder: (bCtx) {
+  //       return GestureDetector(
+  //         child: Padding(
+  //           padding: const EdgeInsets.all(10),
+  //           child: NewCategory(_addNewCategory),
+  //         ),
+  //         onTap: () {},
+  //         behavior: HitTestBehavior.opaque,
+  //       );
+  //     },
+  //   );
+  // }
 
   void _startAddNew(BuildContext context, int index) {
     if (index == 0) {
-      _startAddNewCategory(context);
+      //nothing
     } else if (index == 1) {
       _selectAllProduct(context);
     } else {
@@ -373,10 +373,11 @@ class _MyHomePageState extends State<MyHomePage> {
         : AppBar(
             title: Text(pageTitle),
             actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () => _startAddNew(context, _selectPageIndex),
-              ),
+              if (_selectPageIndex != 0)
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () => _startAddNew(context, _selectPageIndex),
+                ),
               Consumer<CartProvider>(
                 builder: (_, cart, ch) => cart.itemCount > 0
                     ? Badge(
@@ -410,11 +411,12 @@ class _MyHomePageState extends State<MyHomePage> {
               2 * appBar.preferredSize.height -
               MediaQuery.of(context).padding.top) *
           0.7,
-      child: PurchaseList(),
+      child: PurchaseList(
+        addNewPurchase: _startAddNewTransaction,
+      ),
     );
 
     List<Map<String, Object>> _pages = [
-      
       {
         'page': Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -486,20 +488,62 @@ class _MyHomePageState extends State<MyHomePage> {
               animationCurve: Curves.easeInOut,
 
               items: <Widget>[
-                Icon(
-                  Icons.category,
-                  size: 30,
-                  color: Colors.white,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.category,
+                      size: 25,
+                      color: Colors.white,
+                    ),
+                    _selectPageIndex == 0
+                        ? Container()
+                        : Text(
+                            _pages[0]['title'],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                  ],
                 ),
-                Icon(
-                  Icons.shopping_basket,
-                  size: 30,
-                  color: Colors.white,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.shopping_basket,
+                      size: 25,
+                      color: Colors.white,
+                    ),
+                    _selectPageIndex == 1
+                        ? Container()
+                        : Text(
+                            _pages[1]['title'],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                  ],
                 ),
-                Icon(
-                  Icons.shopping_cart,
-                  size: 30,
-                  color: Colors.white,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.shopping_cart,
+                      size: 25,
+                      color: Colors.white,
+                    ),
+                    _selectPageIndex == 2
+                        ? Container()
+                        : Text(
+                            _pages[2]['title'],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                  ],
                 ),
               ],
             ),

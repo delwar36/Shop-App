@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shop_app/login/auth.dart';
 import '../models/cart.dart';
 import '../models/sale.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class SalesProvider with ChangeNotifier {
+  BaseAuth auth;
   List<Sale> _sales = [];
 
   List<Sale> get sales {
@@ -20,7 +23,10 @@ class SalesProvider with ChangeNotifier {
   }
 
   Future<void> fetchAllSales() async {
-    const url = 'https://shop-management-721b3.firebaseio.com/sales.json';
+    final currentUser = await FirebaseAuth.instance.currentUser();
+    String userId = currentUser.uid.toString();
+    final url =
+        'https://shop-management-721b3.firebaseio.com/$userId/sales.json';
     try {
       final response = await http.get(url);
       print(response.body);
@@ -62,7 +68,10 @@ class SalesProvider with ChangeNotifier {
 
   Future<void> addSale(List<Cart> cartProducts, double total,
       String cusImageUrl, String cusName, DateTime dateTime) async {
-    const url = 'https://shop-management-721b3.firebaseio.com/sales.json';
+    final currentUser = await FirebaseAuth.instance.currentUser();
+    String userId = currentUser.uid.toString();
+    final url =
+        'https://shop-management-721b3.firebaseio.com/$userId/sales.json';
 
     Map<String, dynamic> remoteSale = {
       'amount': total,

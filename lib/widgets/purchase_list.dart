@@ -4,6 +4,8 @@ import '../widgets/purchase_item.dart';
 import 'package:provider/provider.dart';
 
 class PurchaseList extends StatelessWidget {
+  final Function addNewPurchase;
+  PurchaseList({this.addNewPurchase});
   @override
   Widget build(BuildContext context) {
     final purchaseData = Provider.of<PurchaseProvider>(context);
@@ -11,21 +13,34 @@ class PurchaseList extends StatelessWidget {
         ? LayoutBuilder(
             builder: (ctx, constrains) {
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Text(
-                    'এখনো কিছু কেনা হয়নি',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.title,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Container(
+                        height: constrains.maxHeight * 0.6,
+                        child: Image.asset(
+                          'assets/images/waiting.png',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'এখনো কিছু কেনা হয়নি',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                    ],
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  Container(
-                    height: constrains.maxHeight * 0.6,
-                    child: Image.asset(
-                      'assets/images/waiting.png',
-                    ),
+                  RaisedButton(
+                    child: Text('কিছু কিনুন'),
+                    onPressed: () => addNewPurchase(context),
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
                   ),
                 ],
               );

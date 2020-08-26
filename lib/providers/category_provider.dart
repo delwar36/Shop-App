@@ -1,11 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shop_app/login/auth.dart';
 import '../helpers/db_helper.dart';
 import '../models/category.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-
 class CategoryProvider with ChangeNotifier {
+  BaseAuth auth;
   String tableName = 'categories';
   String dbName = 'category';
   String creatTable =
@@ -18,7 +20,10 @@ class CategoryProvider with ChangeNotifier {
   }
 
   Future<void> fetchAllCategory() async {
-    const url = 'https://shop-management-721b3.firebaseio.com/categories.json';
+    final currentUser = await FirebaseAuth.instance.currentUser();
+    String userId = currentUser.uid.toString();
+    final url =
+        'https://shop-management-721b3.firebaseio.com/$userId/categories.json';
     try {
       final response = await http.get(url);
       // print(response.body);
@@ -63,8 +68,10 @@ class CategoryProvider with ChangeNotifier {
       'thumbnailLink': category.thumbnailLink,
       'dateTime': category.dateTime.toIso8601String(),
     };
-
-    const url = 'https://shop-management-721b3.firebaseio.com/categories.json';
+    final currentUser = await FirebaseAuth.instance.currentUser();
+    String userId = currentUser.uid.toString();
+    final url =
+        'https://shop-management-721b3.firebaseio.com/$userId/categories.json';
 
     try {
       final response = await http.post(

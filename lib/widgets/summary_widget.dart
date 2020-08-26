@@ -257,18 +257,10 @@ class LogCard extends StatelessWidget {
                   )
                 : Column(
                     children: <Widget>[
+                      for(int i=0; i<purchaseData.length; i++)
                       PurchaseItem(
-                        productItem: purchaseData[0],
+                        productItem: purchaseData[i],
                       ),
-                      PurchaseItem(
-                        productItem: purchaseData[1],
-                      ),
-                      PurchaseItem(
-                        productItem: purchaseData[2],
-                      ),
-                      PurchaseItem(
-                        productItem: purchaseData[2],
-                      )
                     ],
                   ),
           ),

@@ -121,7 +121,7 @@ class _NewtransactionState extends State<Newtransaction> {
           height: 20,
         ),
         TextFormField(
-          decoration: InputDecoration(labelText: 'Unit'),
+          decoration: InputDecoration(labelText: 'একক'),
           controller: _unitController,
         ),
         SizedBox(
