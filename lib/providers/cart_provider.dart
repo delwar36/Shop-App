@@ -82,7 +82,7 @@ class CartProvider with ChangeNotifier {
         pPrice: existingCartItem.pPrice,
         unit: existingCartItem.unit,
         productImage: existingCartItem.productImage,
-        quantiy: existingCartItem.quantiy + 1,
+        quantiy: existingCartItem.quantiy + 0.5,
       ),
     );
     notifyListeners();

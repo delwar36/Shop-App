@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/bangla_converters/number_converter.dart';
 import '../models/product.dart';
 import '../widgets/badge.dart';
 import '../providers/products_provider.dart';
@@ -33,7 +34,8 @@ class ProductItem extends StatelessWidget {
       child: cart.getQuantity(product.id) == 0
           ? ProductCard(product: product)
           : Badge(
-              value: cart.getQuantity(product.id).toStringAsFixed(0),
+              value: EnglishToBangla.englishToBanglaNumberFont(
+                  cart.getQuantity(product.id).toStringAsFixed(0)),
               color: Colors.red,
               child: ProductCard(product: product),
               right: 2,
@@ -84,7 +86,8 @@ class ProductCard extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
                 color: Colors.black54,
                 child: Text(
-                  '\u09f3${product.sPrice.toStringAsFixed(1)}',
+                  EnglishToBangla.englishToBanglaNumberFont(
+                      '\u09f3${product.sPrice.toStringAsFixed(1)}'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,

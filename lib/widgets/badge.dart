@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/bangla_converters/number_converter.dart';
 
 class Badge extends StatelessWidget {
- 
   final Widget child;
   final String value;
   final Color color;
@@ -15,7 +15,6 @@ class Badge extends StatelessWidget {
     this.color,
     @required this.right,
     @required this.top,
-
   }) : super(key: key);
 
   @override
@@ -39,7 +38,7 @@ class Badge extends StatelessWidget {
               minHeight: 16,
             ),
             child: Text(
-              value,
+              EnglishToBangla.englishToBanglaNumberFont(value),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 10,

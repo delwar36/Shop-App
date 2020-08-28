@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'আমার দোকান',
+        title: 'দোকান ম্যানেজমেন্ট',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           accentColor: Colors.blue,
@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp> {
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
-              button: TextStyle(
+              button: TextStyle( 
                 color: Colors.white,
               )),
           appBarTheme: AppBarTheme(

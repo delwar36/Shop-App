@@ -14,11 +14,11 @@ class SalesScreen extends StatelessWidget {
     final saleData = Provider.of<SalesProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sales'),
+        title: Text('বিক্রয়সমুহ'),
       ),
       // drawer: AppDrawer(),
       body: saleData.sales.length == 0
-          ? LayoutBuilder(
+          ? LayoutBuilder( 
               builder: (ctx, constrains) {
                 return Column(
                   children: <Widget>[
@@ -27,7 +27,7 @@ class SalesScreen extends StatelessWidget {
                       children: <Widget>[
                         SizedBox(
                           height: 20,
-                        ),
+                        ), 
                         Text(
                           'এখনো কিছু বিক্রি হয়নি',
                           textAlign: TextAlign.center,

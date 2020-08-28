@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shop_app/login/auth.dart';
 // import 'package:shop_mangement/helpers/db_helper.dart';
 import '../models/product.dart';
 import 'dart:convert';
@@ -13,7 +12,6 @@ class ProductsProvider with ChangeNotifier {
   //     'CREATE TABLE products(id TEXT PRIMARY KEY, title TEXT, categories TEXT, pPrice DOUBLE(50, 2), sPrice DOUBLE(50, 2), unit TEXT, amount DOUBLE(50, 2), imageUrl TEXT, dateTime TEXT)';
 
   List<Product> _items = [];
-  BaseAuth auth;
 
   List<Product> get items {
     return [..._items];

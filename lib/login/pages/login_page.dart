@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Animation logoanimation;
   String _email, _password, _emailpassword;
   FocusNode focusNode;
-
+  bool _isLoading = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
   final formKey1 = GlobalKey<FormState>();
@@ -40,10 +40,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   void _submit() {
     final form = formKey.currentState;
+
     if (form.validate()) {
       form.save();
       print("Email: $_email Password: $_password");
       _login();
+      setState(() {
+        _isLoading = true;
+      });
     }
   }
 
@@ -75,6 +79,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       // );
     } catch (e) {
       final snackBar = SnackBar(content: Text("সাইন ইন করতে সমস্যা হচ্ছে!"));
+      setState(() {
+        _isLoading = false;
+      });
       scaffoldKey.currentState.showSnackBar(snackBar);
       print("Error: $e");
     }
@@ -89,6 +96,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         Navigator.of(context).pop();
         final snackBar =
             SnackBar(content: Text("পাসওয়ার্ড রিসেট কোড পাঠানো হয়েছে"));
+
+        Scaffold.of(context).hideCurrentSnackBar();
         scaffoldKey.currentState.showSnackBar(snackBar);
       } catch (e) {}
     }
@@ -181,16 +190,20 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       borderRadius: BorderRadius.circular(30.0)),
                   child: FlatButton(
                     color: Colors.blue,
-                    onPressed: _submit,
-                    child: Text(
-                      "লগইন",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontFamily: "Karla",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    onPressed: _isLoading ? () {} : _submit,
+                    child: _isLoading
+                        ? CircularProgressIndicator(
+                            backgroundColor: Colors.white,
+                          )
+                        : Text(
+                            "লগইন",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
+                              fontFamily: "Karla",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0)),
                     splashColor: Colors.blue[800],

@@ -42,8 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool _showChart = false;
   bool _isLoading = true;
-  // ignore: unused_field
-  String _name = "Android", _email = "";
 
   // List<Transaction> get _recentTransactions {
   //   return _userTransactions.where((tx) {
@@ -101,14 +99,6 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
 
-    widget.auth.currentUser().then((user) {
-      setState(() {
-        if (user != null)
-          _email = user.email.toString();
-        else
-          _email = "লোড হচ্ছে...";
-      });
-    });
     super.initState();
   }
 
@@ -136,8 +126,12 @@ class _MyHomePageState extends State<MyHomePage> {
       imageUrl: imageUrl,
     );
     try {
-      await Provider.of<ProductsProvider>(context, listen: false)
-          .addProduct(product, );
+      setState(() {
+        _isLoading = true;
+      });
+      await Provider.of<ProductsProvider>(context, listen: false).addProduct(
+        product,
+      );
       await Provider.of<PurchaseProvider>(context, listen: false)
           .addPurchase(product);
     } catch (error) {

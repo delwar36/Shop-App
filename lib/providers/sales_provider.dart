@@ -1,13 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shop_app/login/auth.dart';
 import '../models/cart.dart';
 import '../models/sale.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class SalesProvider with ChangeNotifier {
-  BaseAuth auth;
   List<Sale> _sales = [];
 
   List<Sale> get sales {
@@ -40,6 +38,8 @@ class SalesProvider with ChangeNotifier {
           Sale(
             id: prodId,
             amount: prodData['amount'],
+            cusPaid: prodData['cusPaid'],
+            purchaseAmount: prodData['purchaseAmount'],
             dateTime: DateTime.parse(prodData['dateTime']),
             cusImageUrl: prodData['cusImageUrl'],
             cusName: prodData['cusName'],
@@ -66,7 +66,7 @@ class SalesProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addSale(List<Cart> cartProducts, double total,
+  Future<void> addSale(List<Cart> cartProducts, double total, double cusPaid, double totalPurchase,
       String cusImageUrl, String cusName, DateTime dateTime) async {
     final currentUser = await FirebaseAuth.instance.currentUser();
     String userId = currentUser.uid.toString();
@@ -75,6 +75,8 @@ class SalesProvider with ChangeNotifier {
 
     Map<String, dynamic> remoteSale = {
       'amount': total,
+      'cusPaid': cusPaid,
+      'purchaseAmount': totalPurchase,
       'cusImageUrl': cusImageUrl,
       'cusName': cusName,
       'products': cartProducts
@@ -99,6 +101,8 @@ class SalesProvider with ChangeNotifier {
       _sales.add(
         Sale(
           amount: total,
+          cusPaid: cusPaid,
+          purchaseAmount: totalPurchase,
           dateTime: dateTime,
           id: json.decode(response.body)['name'],
           cusImageUrl: cusImageUrl,

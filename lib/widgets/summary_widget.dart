@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/bangla_converters/number_converter.dart';
+import 'package:shop_app/models/sale.dart';
 import '../providers/sales_provider.dart';
 import '../providers/products_provider.dart';
 import '../providers/purchase_provider.dart';
@@ -32,9 +33,55 @@ class AmountCard extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+  double totalSalePriceToday(List<Sale> sales) {
+    double totalSum = 0.0;
+    final weekDay = DateTime.now();
+
+    for (var i = 0; i < sales.length; i++) {
+      if (sales[i].dateTime.day == weekDay.day &&
+          sales[i].dateTime.month == weekDay.month &&
+          sales[i].dateTime.year == weekDay.year) {
+        totalSum += sales[i].amount;
+      }
+    }
+    return totalSum;
+  }
+
+  double totalSoldPurchasePriceToday(List<Sale> sales) {
+    double totalSum = 0.0;
+    final weekDay = DateTime.now();
+
+    for (var i = 0; i < sales.length; i++) {
+      if (sales[i].dateTime.day == weekDay.day &&
+          sales[i].dateTime.month == weekDay.month &&
+          sales[i].dateTime.year == weekDay.year) {
+        totalSum += sales[i].purchaseAmount;
+      }
+    }
+    return totalSum;
+  }
+
+  double totalPaidPriceToday(List<Sale> sales) {
+    double totalSum = 0.0;
+    final weekDay = DateTime.now();
+
+    for (var i = 0; i < sales.length; i++) {
+      if (sales[i].dateTime.day == weekDay.day &&
+          sales[i].dateTime.month == weekDay.month &&
+          sales[i].dateTime.year == weekDay.year) {
+        totalSum += sales[i].cusPaid;
+      }
+    }
+    return totalSum;
+  }
+
   @override
   Widget build(BuildContext context) {
     final sale = Provider.of<SalesProvider>(context, listen: false);
+    final totalSale = totalSalePriceToday(sale.sales);
+    final totalPurchase = totalSoldPurchasePriceToday(sale.sales);
+    final totalPaid = totalPaidPriceToday(sale.sales);
+    final totalDue = totalSale - totalPaid;
 
     return Card(
       elevation: 6,
@@ -44,7 +91,7 @@ class AmountCard extends StatelessWidget {
             padding: EdgeInsets.all(10),
             alignment: Alignment.center,
             child: Text(
-              'আজ এর হিসাব',
+              'আজকের হিসাব',
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 16,
@@ -71,7 +118,7 @@ class AmountCard extends StatelessWidget {
                           FittedBox(
                             child: Text(
                               EnglishToBangla.englishToBanglaNumberFont(
-                                  '\u09f3230.67'),
+                                  '\u09f3${(totalSale - totalPurchase).toStringAsFixed(2)}'),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -105,8 +152,7 @@ class AmountCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         showPriceItem(
-                          sale,
-                          sale.totalAmountSold.toStringAsFixed(2),
+                          totalSale.toStringAsFixed(2),
                           'বিক্রিঃ',
                         ),
                         Divider(
@@ -114,8 +160,7 @@ class AmountCard extends StatelessWidget {
                           thickness: 1,
                         ),
                         showPriceItem(
-                          sale,
-                          sale.totalAmountSold.toStringAsFixed(2),
+                          totalPaid.toStringAsFixed(2),
                           'পেয়েছিঃ',
                         ),
                         Divider(
@@ -123,8 +168,7 @@ class AmountCard extends StatelessWidget {
                           thickness: 1,
                         ),
                         showPriceItem(
-                          sale,
-                          sale.totalAmountSold.toStringAsFixed(2),
+                          totalDue.toStringAsFixed(2),
                           'বাকিঃ',
                         ),
                       ],
@@ -139,7 +183,7 @@ class AmountCard extends StatelessWidget {
     );
   }
 
-  Container showPriceItem(SalesProvider sale, String total, String type) {
+  Container showPriceItem(String total, String type) {
     return Container(
       alignment: Alignment.centerLeft,
       child: Row(
@@ -257,10 +301,10 @@ class LogCard extends StatelessWidget {
                   )
                 : Column(
                     children: <Widget>[
-                      for(int i=0; i<purchaseData.length; i++)
-                      PurchaseItem(
-                        productItem: purchaseData[i],
-                      ),
+                      for (int i = 0; i < purchaseData.length; i++)
+                        PurchaseItem(
+                          productItem: purchaseData[i],
+                        ),
                     ],
                   ),
           ),

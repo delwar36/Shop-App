@@ -21,6 +21,7 @@ class _NewtransactionState extends State<Newtransaction> {
   final _sPriceController = TextEditingController();
   final _unitController = TextEditingController();
   // DateTime _selectedDate;
+  bool _isLoading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
@@ -40,9 +41,14 @@ class _NewtransactionState extends State<Newtransaction> {
 
     String storageResult;
 
+    setState(() {
+      _isLoading = true;
+    });
+
     if (_formKey.currentState.validate()) {
       try {
-        storageResult = await UploadImage.upload(imageToUpload: _pickedImage, imageCategory: 'product');
+        storageResult = await UploadImage.upload(
+            imageToUpload: _pickedImage, imageCategory: 'product');
       } catch (error) {
         print(error.toString());
         throw error;
@@ -145,9 +151,13 @@ class _NewtransactionState extends State<Newtransaction> {
         ),
         RaisedButton(
           color: Theme.of(context).primaryColor,
-          child: Text('কিনুন'),
+          child: _isLoading
+              ? CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                )
+              : Text('কিনুন'),
           textColor: Theme.of(context).textTheme.button.color,
-          onPressed: _submitData,
+          onPressed: _isLoading ? () {} : _submitData,
         ),
       ],
     );

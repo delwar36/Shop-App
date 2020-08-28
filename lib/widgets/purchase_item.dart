@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+import 'package:shop_app/bangla_converters/number_converter.dart';
 import '../models/product.dart';
 
 class PurchaseItem extends StatefulWidget {
@@ -36,59 +36,32 @@ class _PurchaseItemState extends State<PurchaseItem> {
       margin: EdgeInsets.symmetric(
         vertical: 3,
       ),
-      child: Slidable(
-        actions: <Widget>[
-          IconSlideAction(
-            caption: 'আর্কাইভ',
-            color: Colors.blue,
-            icon: Icons.archive,
+      child: ListTile(
+        leading: CircleAvatar(
+          radius: 28,
+          backgroundColor: Colors.transparent,
+          backgroundImage: NetworkImage(
+            widget.productItem.imageUrl,
           ),
-          IconSlideAction(
-            caption: 'শেয়ার',
-            color: Colors.indigo,
-            icon: Icons.share,
-          ),
-        ],
-        secondaryActions: <Widget>[
-          IconSlideAction(
-            caption: 'আরো',
-            color: Colors.black45,
-            icon: Icons.more_horiz,
-          ),
-          IconSlideAction(
-            caption: 'মুছুন',
-            color: Colors.red,
-            icon: Icons.delete,
-            onTap: () => () {},
-          ),
-        ],
-        actionPane: SlidableScrollActionPane(),
-        child: ListTile(
-          leading: CircleAvatar(
-            radius: 28,
-            backgroundColor: Colors.transparent,
-            backgroundImage: NetworkImage(
-                widget.productItem.imageUrl,
-              ),
-            // FittedBox(
-            //     child: Text(
-            //         '${widget.productItem.amount} ${widget.productItem.unit}')),
-          ),
-          title: Text(
-            widget.productItem.title,
-            style: Theme.of(context).textTheme.title,
-          ),
-          subtitle:
-              Text(DateFormat.yMMMd().format(widget.productItem.dateTime)),
-          trailing: Container(
-            padding: EdgeInsets.all(7),
-            child: Text(
-              '${widget.productItem.amount.toStringAsFixed(1)} ${widget.productItem.unit}',
-              style: TextStyle(
-                color: _color,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+          // FittedBox(
+          //     child: Text(
+          //         '${widget.productItem.amount} ${widget.productItem.unit}')),
+        ),
+        title: Text(
+          widget.productItem.title,
+          style: Theme.of(context).textTheme.title,
+        ),
+        subtitle: Text(EnglishToBangla.englishToBanglaNumberFont(
+            DateFormat.yMMMd().format(widget.productItem.dateTime))),
+        trailing: Container(
+          padding: EdgeInsets.all(7),
+          child: Text(
+            EnglishToBangla.englishToBanglaNumberFont(
+                '${widget.productItem.amount.toStringAsFixed(1)} ${widget.productItem.unit}'),
+            style: TextStyle(
+              color: _color,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),

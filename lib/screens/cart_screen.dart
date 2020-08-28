@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/bangla_converters/number_converter.dart';
 import '../providers/products_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/sales_provider.dart';
@@ -16,6 +17,7 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   final cusNameController = TextEditingController();
+  final cusPaidController = TextEditingController();
   bool _isLoading = false;
 
   @override
@@ -25,7 +27,7 @@ class _CartScreenState extends State<CartScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Shopping Bag'),
+        title: Text('বাজারের ব্যাগ'),
       ),
       body: Column(
         children: <Widget>[
@@ -37,7 +39,7 @@ class _CartScreenState extends State<CartScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'Total',
+                    'মোট',
                     style: TextStyle(
                       fontSize: 18,
                     ),
@@ -45,7 +47,8 @@ class _CartScreenState extends State<CartScreen> {
                   Spacer(),
                   Chip(
                     label: Text(
-                      '\u09f3${cart.totalSoldAmount.toStringAsFixed(2)}',
+                      EnglishToBangla.englishToBanglaNumberFont(
+                          '\u09f3${cart.totalSoldAmount.toStringAsFixed(2)}'),
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -62,11 +65,44 @@ class _CartScreenState extends State<CartScreen> {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: Text('ক্রেতার নাম কি?'),
-                                content: TextField(
-                                  decoration: InputDecoration(
-                                      labelText: 'নাম (ঐচ্ছিক)'),
-                                  controller: cusNameController,
+                                title: Text('লেনদেন এর তথ্য দিন'),
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            'মোট',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          Text(
+                                            EnglishToBangla
+                                                .englishToBanglaNumberFont(
+                                                    '\u09f3${cart.totalSoldAmount.toStringAsFixed(2)}'),
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                            labelText: 'ক্রেতার নাম'),
+                                        controller: cusNameController,
+                                      ),
+                                      TextField(
+                                          decoration: InputDecoration(
+                                              labelText: 'পরিশোধ'),
+                                          controller: cusPaidController,
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(
+                                                  decimal: true)),
+                                    ],
+                                  ),
                                 ),
                                 actions: <Widget>[
                                   FlatButton(
@@ -83,6 +119,8 @@ class _CartScreenState extends State<CartScreen> {
                                       });
                                       Navigator.of(context).pop();
                                       final cusName = cusNameController.text;
+                                      final cusPaid =
+                                          double.parse(cusPaidController.text);
                                       try {
                                         await Provider.of<SalesProvider>(
                                                 context,
@@ -90,6 +128,8 @@ class _CartScreenState extends State<CartScreen> {
                                             .addSale(
                                           cart.items.values.toList(),
                                           cart.totalSoldAmount,
+                                          cusPaid,
+                                          cart.totalPurchaseAmount,
                                           'https://pngimage.net/wp-content/uploads/2018/06/logo-contact-png-2.png',
                                           cusName,
                                           DateTime.now(),
@@ -113,8 +153,7 @@ class _CartScreenState extends State<CartScreen> {
                                           context: context,
                                           builder: (ctx) => AlertDialog(
                                             title: Text('সমস্যা!'),
-                                            content:
-                                                Text('কোনো সমস্যা হয়েছে'),
+                                            content: Text('কোনো সমস্যা হয়েছে'),
                                             actions: <Widget>[
                                               FlatButton(
                                                 child: Text('আচ্ছা'),

@@ -27,12 +27,17 @@ class _SplashScreenState extends State<SplashScreen>
     logoanimation.addListener(() => this.setState(() {}));
     textanimation.addListener(() => this.setState(() {}));
     animationController.forward();
+
     Timer(
-        Duration(seconds: 5),
-        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => RootPage(
-                  auth: widget.auth,
-                ))));
+      Duration(seconds: 5),
+      () => Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (BuildContext context) => RootPage(
+            auth: widget.auth,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -48,43 +53,28 @@ class _SplashScreenState extends State<SplashScreen>
         fit: StackFit.expand,
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(color: Colors.blue),
+            decoration: BoxDecoration(color: Colors.white),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset(
-                        "assets/images/loginlogo.png",
-                        height: logoanimation.value * 2,
-                        width: logoanimation.value * 2,
-                      ),
-                    ],
-                  )),
-              Expanded(
-                flex: 1,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(
-                          Colors.yellowAccent),
+                    Image.asset(
+                      "assets/images/loginlogo.png",
+                      height: logoanimation.value * 2,
+                      width: logoanimation.value * 2,
                     ),
-                    Padding(padding: EdgeInsets.only(top: 20.0)),
-                    Text(
-                      "              লোড হচ্ছে....\n ধৈর্য ধরে থাকার জন্য ধন্যবাদ",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
-                          fontSize: 13.0),
-                    )
                   ],
                 ),
+              ),
+              CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+              ),
+              SizedBox(
+                height: 20,
               )
             ],
           ),

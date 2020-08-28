@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/bangla_converters/number_converter.dart';
 import '../models/product.dart';
 import '../providers/products_provider.dart';
 
@@ -13,7 +14,7 @@ class StockItem extends StatelessWidget {
     final product =
         Provider.of<ProductsProvider>(context, listen: false).getById(id);
 
-    return InkWell(      
+    return InkWell(
       onTap: () {},
       child: ProductCard(product: product),
     );
@@ -65,7 +66,8 @@ class ProductCard extends StatelessWidget {
                     return ch;
                   },
                   child: Text(
-                    '${product.amount.toStringAsFixed(1)} ${product.unit}',
+                    EnglishToBangla.englishToBanglaNumberFont(
+                        '${product.amount.toStringAsFixed(1)} ${product.unit}'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,

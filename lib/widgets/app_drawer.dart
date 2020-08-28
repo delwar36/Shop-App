@@ -63,7 +63,7 @@ class AppDrawer extends StatelessWidget {
             buildTile(
                 'বিক্রয় ইতিহাস', Icons.history, SalesScreen.routeName, context),
             buildTile('স্টক পণ্য', Icons.store, StockScreen.routeName, context),
-            buildTile('লগআউট', Icons.arrow_left, null, context)
+            buildTile('লগআউট', Icons.exit_to_app, null, context)
           ],
         ),
       ),
