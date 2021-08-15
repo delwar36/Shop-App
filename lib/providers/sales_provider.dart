@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 import '../models/cart.dart';
 import '../models/sale.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class SalesProvider with ChangeNotifier {
   List<Sale> _sales = [];
@@ -21,12 +23,12 @@ class SalesProvider with ChangeNotifier {
   }
 
   Future<void> fetchAllSales() async {
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
     final url =
         'https://shop-management-721b3.firebaseio.com/$userId/sales.json';
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       print(response.body);
       final extractData = json.decode(response.body) as Map<String, dynamic>;
       final List<Sale> loadedSale = [];
@@ -66,9 +68,15 @@ class SalesProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addSale(List<Cart> cartProducts, double total, double cusPaid, double totalPurchase,
-      String cusImageUrl, String cusName, DateTime dateTime) async {
-    final currentUser = await FirebaseAuth.instance.currentUser();
+  Future<void> addSale(
+      List<Cart> cartProducts,
+      double total,
+      double cusPaid,
+      double totalPurchase,
+      String cusImageUrl,
+      String cusName,
+      DateTime dateTime) async {
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
     final url =
         'https://shop-management-721b3.firebaseio.com/$userId/sales.json';
@@ -95,7 +103,7 @@ class SalesProvider with ChangeNotifier {
 
     try {
       final response = await http.post(
-        url,
+        Uri.parse(url),
         body: json.encode(remoteSale),
       );
       _sales.add(

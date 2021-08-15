@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class BaseAuth {
-  Future<FirebaseUser> currentUser();
+  Future<User> currentUser();
   Future<String> signIn(String email, String password);
   Future<String> createUser(String email, String password);
   Future<void> signOut();
@@ -16,31 +16,31 @@ class Auth implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Future<String> signIn(String email, String password) async {
-    FirebaseUser user = (await _firebaseAuth.signInWithEmailAndPassword(
-            email: email, password: password))
-        .user;
-    return user.uid;
-  }
-  
-  Future<String> createUser(String email, String password) async {
-    FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
+    User user = (await _firebaseAuth.signInWithEmailAndPassword(
             email: email, password: password))
         .user;
     return user.uid;
   }
 
-  Future<FirebaseUser> currentUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+  Future<String> createUser(String email, String password) async {
+    User user = (await _firebaseAuth.createUserWithEmailAndPassword(
+            email: email, password: password))
+        .user;
+    return user.uid;
+  }
+
+  Future<User> currentUser() async {
+    User user = await _firebaseAuth.currentUser;
     return user;
   }
 
   Future<String> getCurrentUserId() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    User user = await _firebaseAuth.currentUser;
     return user.uid;
   }
 
   Future<String> getEmail() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    User user = await _firebaseAuth.currentUser;
     return user.email;
   }
 
@@ -49,8 +49,8 @@ class Auth implements BaseAuth {
   }
 
   Future<bool> isEmailVerified() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    return user.isEmailVerified;
+    User user = await _firebaseAuth.currentUser;
+    return user.emailVerified;
   }
 
   Future<void> resetPassword(String email) async {
@@ -58,7 +58,7 @@ class Auth implements BaseAuth {
   }
 
   Future<void> sendEmailVerification() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    User user = await _firebaseAuth.currentUser;
     return user.sendEmailVerification();
   }
 }

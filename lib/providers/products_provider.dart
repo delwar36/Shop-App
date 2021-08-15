@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 // import 'package:shop_mangement/helpers/db_helper.dart';
 import '../models/product.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class ProductsProvider with ChangeNotifier {
   // String tableName = 'products';
@@ -30,11 +32,11 @@ class ProductsProvider with ChangeNotifier {
   Future<void> decreaseById(String id, double amount) async {
     Product product = _items.firstWhere((prod) => prod.id == id);
 
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
     final url =
         'https://shop-management-721b3.firebaseio.com/$userId/products/$id.json';
-    await http.patch(url,
+    await http.patch(Uri.parse(url),
         body: json.encode({
           'amount': product.amount - amount,
         }));
@@ -44,12 +46,12 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> fetchAllProduct() async {
     _items.clear();
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
     final url =
         'https://shop-management-721b3.firebaseio.com/$userId/products.json';
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       // print(response.body);
       final extractData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProduct = [];
@@ -110,7 +112,7 @@ class ProductsProvider with ChangeNotifier {
       'dateTime': product.dateTime.toIso8601String(),
     };
 
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
 
     final url =
@@ -118,7 +120,7 @@ class ProductsProvider with ChangeNotifier {
 
     try {
       final response = await http.post(
-        url,
+        Uri.parse(url),
         body: json.encode(remmoteProduct),
       );
       print('UserId: ' + userId);
@@ -156,12 +158,12 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String productId) async {
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
     final url =
         'https://shop-management-721b3.firebaseio.com/$userId/products/$productId.json';
     try {
-      await http.delete(url);
+      await http.delete(Uri.parse(url));
       _items.remove(_items.firstWhere((prod) => prod.id == productId));
       notifyListeners();
     } catch (error) {

@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shop_app/login/auth.dart';
+
 import '../helpers/db_helper.dart';
 import '../models/category.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class CategoryProvider with ChangeNotifier {
   BaseAuth auth;
@@ -20,12 +22,12 @@ class CategoryProvider with ChangeNotifier {
   }
 
   Future<void> fetchAllCategory() async {
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
     final url =
         'https://shop-management-721b3.firebaseio.com/$userId/categories.json';
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       // print(response.body);
       final extractData = json.decode(response.body) as Map<String, dynamic>;
       // final extractData = await DBHelper.getData(tableName, dbName, creatTable);
@@ -68,14 +70,14 @@ class CategoryProvider with ChangeNotifier {
       'thumbnailLink': category.thumbnailLink,
       'dateTime': category.dateTime.toIso8601String(),
     };
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
     final url =
         'https://shop-management-721b3.firebaseio.com/$userId/categories.json';
 
     try {
       final response = await http.post(
-        url,
+        Uri.parse(url),
         body: json.encode(remoteCategory),
       );
       final newCategory = Category(

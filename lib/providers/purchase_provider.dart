@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shop_app/login/auth.dart';
+
 // import 'package:shop_mangement/helpers/db_helper.dart';
 import '../models/product.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class PurchaseProvider with ChangeNotifier {
   // String tableName = 'products';
@@ -30,12 +32,12 @@ class PurchaseProvider with ChangeNotifier {
 
   Future<void> fetchAllPurchase() async {
     _items.clear();
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
     final url =
         'https://shop-management-721b3.firebaseio.com/$userId/purchase.json';
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       // print(response.body);
       final extractData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProduct = [];
@@ -93,14 +95,14 @@ class PurchaseProvider with ChangeNotifier {
       'imageUrl': product.imageUrl,
       'dateTime': product.dateTime.toIso8601String(),
     };
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
     final url =
         'https://shop-management-721b3.firebaseio.com/$userId/purchase.json';
 
     try {
       final response = await http.post(
-        url,
+        Uri.parse(url),
         body: json.encode(remmoteProduct),
       );
       final newProduct = Product(
@@ -136,12 +138,12 @@ class PurchaseProvider with ChangeNotifier {
   }
 
   Future<void> deletePurchase(String productId) async {
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = await FirebaseAuth.instance.currentUser;
     String userId = currentUser.uid.toString();
     final url =
         'https://shop-management-721b3.firebaseio.com/$userId/purchase/$productId.json';
     try {
-      await http.delete(url);
+      await http.delete(Uri.parse(url));
       _items.remove(_items.firstWhere((prod) => prod.id == productId));
       notifyListeners();
     } catch (error) {
